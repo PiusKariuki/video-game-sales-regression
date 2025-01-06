@@ -108,16 +108,37 @@ User_Count_hist
 ```
 
 
+```{r}
+summary(Vgsales_df$User_Count)
+```
 
+```{r}
+Rating_bar = ggplot(Vgsales_df, aes(x=Rating, fill=Rating)) + geom_bar()
+Rating_bar
+```
 
+## Multivariate plots
+```{r}
+fig(20,8)
+sales_by_platform <- ggplot(Vgsales_df, aes(Platform, Global_Sales, fill = Platform)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle=90, vjust = .5, hjust = 1)) + labs(x="Platform", y="Global_Series", title="Sales by Platform")
+sales_by_platform
+```
 
+```{r}
+Vgsales_df %>% select(Publisher, Global_Sales) %>% group_by(Publisher) %>% summarise(Total_sales=sum(Global_Sales)) %>% arrange(desc(Total_sales)) %>%  head(10) %>% ggplot(aes(x=Publisher, y=Total_sales, fill=Publisher)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle = 90, hjust = 1, vjust = .5, size=10)) + labs(x="Developer", y="Global Sales", title="Top 10 selling Developers")
 
+```
 
+```{r}
+summary(Vgsales_df)
+str(Vgsales_df)
 
+Vgsales_df %>% select(Name, Global_Sales) %>% arrange(desc(Global_Sales)) %>% head(10) %>% ggplot(aes(x=Name, y = Global_Sales, fill = Name)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle = 90,vjust = .5, hjust = 1)) + labs(x="Game", y="Global sales", title = "Top 10 best selling games")
+```
 
-
-
-
+```{r}
+ggplot(Vgsales_df, aes(Game_Age, Global_Sales)) + geom_jitter(color="darkviolet")
+```
 
 
 
