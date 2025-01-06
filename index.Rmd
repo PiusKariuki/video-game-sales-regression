@@ -80,7 +80,7 @@ Age_bar
 
 ```{r}
 fig(50,8)
-Genre_bar <- ggplot(Vgsales_df, aes(x=Genre, fill = Genre)) + geom_bar()
+Genre_bar <- ggplot(Vgsales_df, aes(x=Genre, fill = Genre)) + geom_bar() + theme(axis.text.x=element_text(angle=90, vjust=.5, hjust=1))
 Genre_bar
 ```
 
@@ -94,6 +94,30 @@ Critic_Score_hist
 Critic_Count_hist <- ggplot(Vgsales_df, aes(Critic_Count)) + geom_histogram(binwidth = 4, color="black", fill="skyblue")
 Critic_Count_hist
 ```
+
+```{r}
+fig(30,8)
+Vgsales_df %>% select(Name, User_Score) %>% arrange(desc(User_Score)) %>% head(10) %>% 
+  ggplot(aes(x=Name, y=User_Score, fill = Name)) + geom_bar(stat="identity") + theme(axis.text.x =element_text(angle=90, vjust=.5,hjust=1))
+```
+
+```{r}
+fig(20, 8)
+User_Count_hist <- ggplot(Vgsales_df, aes(User_Count)) + geom_histogram(color="black", fill="skyblue")
+User_Count_hist
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
