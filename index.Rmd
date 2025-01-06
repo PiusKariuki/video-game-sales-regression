@@ -14,15 +14,16 @@ install.packages("FNN")
 install.packages("corrplot")
 install.packages("tree")
 install.packages("caret")
+install.packages("ggplot2")
 
 library(tidyverse)
 library(FNN)
 library(corrplot)
 library(tree)
 library(caret)
+library(ggplot2)
 options(warn=1)
 ```
-
 
 ```{r}
 Vgsales <- read.csv("./archive/Video_Games_Sales_as_at_22_Dec_2016.csv", sep=",", na.strings = c(""," ","NA", "N/A"))
@@ -35,36 +36,64 @@ na_count <-  data.frame(na_count)
 na_count
 ```
 
-
 ```{r}
 #  drop all NA values
 Vgsales <- na.omit(Vgsales)
 str(Vgsales)
 ```
 
-
 ```{r}
 #  drop all sales except global
-
 Vgsales_df <- cbind(Vgsales[,-c(6:10)], Vgsales$Global_Sales)
+Vgsales_df$Year_of_Release <-  2016 - Vgsales_df$Year_of_Release
+names(Vgsales_df)[3] <- "Game_Age"
+names(Vgsales_df)[12] <- "Global_Sales"
+str(Vgsales_df)
+```
 
+```{r}
+summary(Vgsales_df)
+```
+
+### Visualizations of the data analysis
+
+## Univariate plots
+```{r}
+fig <- function(width, height){
+  options(repr.plot.width = width, repr.plot.height = height)
+}
 ```
 
 
+```{r}
+fig(20,8)
+Platform_bar <- ggplot(Vgsales_df, aes(x=Platform, fill=Platform)) + geom_bar()
+Platform_bar
+```
+
+```{r}
+fig(15,8)
+Age_bar <- ggplot(Vgsales_df, aes(x=Game_Age)) + geom_bar(fill="forestgreen")
+Age_bar
+```
 
 
+```{r}
+fig(50,8)
+Genre_bar <- ggplot(Vgsales_df, aes(x=Genre, fill = Genre)) + geom_bar()
+Genre_bar
+```
 
+```{r}
+fig(30,8)
+Critic_Score_hist <- ggplot(Vgsales_df, aes(Critic_Score)) + geom_histogram(binwidth=4,color="black", fill="blue")
+Critic_Score_hist
+```
 
-
-
-
-
-
-
-
-
-
-
+```{r}
+Critic_Count_hist <- ggplot(Vgsales_df, aes(Critic_Count)) + geom_histogram(binwidth = 4, color="black", fill="skyblue")
+Critic_Count_hist
+```
 
 
 
