@@ -26,7 +26,7 @@ options(warn=1)
 ```
 
 ```{r}
-Vgsales <- read.csv("./archive/Video_Games_Sales_as_at_22_Dec_2016.csv", sep=",", na.strings = c(""," ","NA", "N/A"))
+Vgsales <- read.csv("./archive/Video_Games_Sales_as_at_22_Dec_2016.csv", sep=",", na.strings = c(""," ","NA", "N/A"), stringsAsFactors = TRUE)
 head(Vgsales)
 
 str(Vgsales)
@@ -126,7 +126,6 @@ sales_by_platform
 
 ```{r}
 Vgsales_df %>% select(Publisher, Global_Sales) %>% group_by(Publisher) %>% summarise(Total_sales=sum(Global_Sales)) %>% arrange(desc(Total_sales)) %>%  head(10) %>% ggplot(aes(x=Publisher, y=Total_sales, fill=Publisher)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle = 90, hjust = 1, vjust = .5, size=10)) + labs(x="Developer", y="Global Sales", title="Top 10 selling Developers")
-
 ```
 
 ```{r}
@@ -159,8 +158,8 @@ ggplot(Vgsales_df, aes(User_Count, Global_Sales)) + geom_jitter(color="orange")
 ### Data preparation
 
 ```{r}
-# Name column is an id column we can remove for good (only user for games Top 10 sales)
-Vgsales_df <-  Vgsales_df[,-1]
+summary(Vgsales_df)
+Vgsales_df <- Vgsales_df[,-1]
 knn.df <- Vgsales_df
 head(knn.df)
 ```
@@ -168,7 +167,8 @@ head(knn.df)
 
 
 ```{r}
-# Any non_numeric number coerced into a NA
+str(knn.df)
+summary(knn.df)
 for (i in 1:dim(knn.df)[2]) {
   knn.df[,i] <- as.numeric(knn.df[,i])
 }
@@ -194,9 +194,17 @@ train.index <- sample(1:nrow(knn.df), train.size, replace=F)
 train.set <- knn.df[train.index,]
 test.set <- knn.df[-train.index,]
 train.x <- train.set[,-11] # exclude the global sales column
-train.y <- train.set[,11]
-test.x <- test.set[,-11]
-text.y <- test.set[,11]
+train.y <- train.set[,11] # Only the global sales column
+test.x <- test.set[,-11] # exclude the global sales column
+test.y <- test.set[,11]  # Only the global sales column
+```
+
+
+```{r}
+pred_003 <- FNN::knn.reg(train = train.x, test = test.x, y = train.y, k = 3)
+diff3 = test.y-pred_003$pred
+test_mse = mean(diff3^2)
+test_mse
 ```
 
 
