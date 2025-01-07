@@ -140,6 +140,88 @@ Vgsales_df %>% select(Name, Global_Sales) %>% arrange(desc(Global_Sales)) %>% he
 ggplot(Vgsales_df, aes(Game_Age, Global_Sales)) + geom_jitter(color="darkviolet")
 ```
 
+```{r}
+ggplot(Vgsales_df, aes(Critic_Score, Global_Sales)) + geom_jitter(color="darkblue")
+```
+
+```{r}
+ggplot(Vgsales_df, aes(Critic_Count, Global_Sales)) + geom_jitter(color="red")
+```
+
+```{r}
+ggplot(Vgsales_df, aes(User_Count, Global_Sales)) + geom_jitter(color="orange")
+```
+
+# Statistical models for regression
+
+## KNN Regressor
+
+### Data preparation
+
+```{r}
+# Name column is an id column we can remove for good (only user for games Top 10 sales)
+Vgsales_df <-  Vgsales_df[,-1]
+knn.df <- Vgsales_df
+head(knn.df)
+```
+
+
+
+```{r}
+# Any non_numeric number coerced into a NA
+for (i in 1:dim(knn.df)[2]) {
+  knn.df[,i] <- as.numeric(knn.df[,i])
+}
+head(knn.df)
+```
+
+
+```{r}
+knn.df1 <- sapply(knn.df[,1:(dim(knn.df)[2]-1)], scale)
+knn.df1 <- as.data.frame(knn.df1)
+knn.df <- cbind(knn.df1, knn.df$Global_Sales)
+names(knn.df)[11] = "Global_Sales"
+head(knn.df)
+```
+
+# Train and test
+
+```{r}
+set.seed(5)
+
+train.size <- floor(.7*nrow(knn.df))
+train.index <- sample(1:nrow(knn.df), train.size, replace=F)
+train.set <- knn.df[train.index,]
+test.set <- knn.df[-train.index,]
+train.x <- train.set[,-11] # exclude the global sales column
+train.y <- train.set[,11]
+test.x <- test.set[,-11]
+text.y <- test.set[,11]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
